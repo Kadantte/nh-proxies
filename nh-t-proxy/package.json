@@ -1,0 +1,17 @@
+{
+  "name": "nh-t-proxy",
+  "version": "0.0.1",
+  "description": "Just a proxy",
+  "main": "index.js",
+  "author": "Jae Jin",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "axios": "^0.21.0",
+    "express": "^4.17.1",
+    "http-proxy-middleware": "^1.0.6",
+    "morgan": "^1.10.0"
+  }
+}
