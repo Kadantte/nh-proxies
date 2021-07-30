@@ -5,7 +5,7 @@ const axios = require('axios');
 
 const app = express();
 const HOST = "localhost";
-const PORT = 3000;
+const PORT = 3002;
 const API_SERVICE_URL = "https://t.nhentai.net";
 
 // Logging some shit here
