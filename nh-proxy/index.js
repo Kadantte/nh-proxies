@@ -11,5 +11,5 @@ server.use('*', createProxyMiddleware({
     changeOrigin: true,
  }));
  server.listen(PORT, HOST, () => {
-    console.log(`Starting Proxy at ${HOST}:${PORT}`);
+    console.log(`Starting Proxy at http://${HOST}:${PORT}`);
  });

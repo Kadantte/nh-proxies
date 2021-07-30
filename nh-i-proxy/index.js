@@ -33,5 +33,5 @@ app.get('/galleries/:id/:file', async function (request, reply) {
  }));
 
  app.listen(PORT, HOST, () => {
-    console.log(`Starting Proxy at ${HOST}:${PORT}`);
+    console.log(`Starting Proxy at http://${HOST}:${PORT}`);
  });
