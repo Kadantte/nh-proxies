@@ -1,0 +1,8 @@
+# Dependency directories
+nh-i-proxy/node_modules/
+nh-proxy/node_modules/
+nh-t-proxy/node_modules/
+# Lock files
+nh-i-proxy/package-lock.json/
+nh-proxy/package-lock.json/
+nh-t-proxy/package-lock.json/
