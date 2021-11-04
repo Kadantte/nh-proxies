@@ -1,1 +1,1 @@
-## I created this so Github don't bother me anymore!
+## I created this for Github to not bother me anymore!
