@@ -10,7 +10,7 @@ const API_SERVICE_URL = "https://i.nhentai.net";
 
 // Logging some shit here
 app.use(morgan('dev'));
-// Save picture as picture not as a fucking html
+// Save pictures as pictures not as a fucking html
 app.get('/galleries/:id/:file', async function (request, reply) {  
     axios
         .get(`https://i.nhentai.net/galleries/${request.params.id}/${request.params.file}`, {
