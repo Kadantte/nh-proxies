@@ -12,7 +12,6 @@
         if [ -f "$pkg/package.json" ]; then
           echo "Processing $pkg"
           pushd "$pkg" > /dev/null
-          # Try to use npm ci when a lockfile exists, otherwise fall back to npm install to create one
           if [ -f package-lock.json ]; then
             npm ci --no-audit --no-fund
           else
@@ -33,9 +32,11 @@
     uses: peter-evans/create-pull-request@v5
     with:
       token: ${{ secrets.GITHUB_TOKEN }}
-      commit-message: chore(deps): add/update lockfiles
+      commit-message: "chore(deps): add/update lockfiles"
       branch: add-lockfiles-automated
-      title: chore(deps): add/update lockfiles
+      title: "chore(deps): add/update lockfiles"
       body: |
         This PR adds or updates package lockfiles (package-lock.json) for each package so Dependabot can detect exact installed dependency versions and propose updates.
-      labels: automated, dependencies
+      labels:
+        - automated
+        - dependencies
