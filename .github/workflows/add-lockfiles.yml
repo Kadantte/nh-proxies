@@ -2,9 +2,6 @@ name: Add Lockfiles
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 jobs:
   add-lockfiles:
@@ -52,9 +49,6 @@ jobs:
           branch: add-lockfiles-automated
           title: "chore(deps): add/update lockfiles"
           body: |
-            This PR adds or updates package lockfiles (package-lock.json)
-            for each package so Dependabot can detect exact installed
-            dependency versions and propose updates.
-          labels:
-            - automated
-            - dependencies
+            This PR adds or updates package lockfiles so Dependabot can
+            detect exact installed dependency versions.
+          labels: "automated,dependencies"   # 👈 FIXED (NO DASHES)
