@@ -15,15 +15,45 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
 
       - name: Install dependencies and generate lockfiles
         run: |
           set -e
           REPOS=("nh-proxy" "nh-i-proxy" "nh-t-proxy")
+
           for pkg in "${REPOS[@]}"; do
             if [ -f "$pkg/package.json" ]; then
               echo "Processing $pkg"
+
+              # Restore cache for this package
+              echo "Restoring cache for $pkg..."
+              echo "::group::Cache Restore"
+              CACHE_KEY="${pkg}-$(sha256sum $pkg/package-lock.json 2>/dev/null | cut -d' ' -f1 || echo 'no-lockfile')"
+              CACHE_KEY_FALLBACK="${pkg}-fallback"
+              echo "CACHE_KEY=$CACHE_KEY" > cache_env
+              echo "::endgroup::"
+            fi
+          done
+
+      - name: Cache node_modules for all packages
+        uses: actions/cache@v4
+        id: cache
+        with:
+          path: |
+            nh-proxy/node_modules
+            nh-i-proxy/node_modules
+            nh-t-proxy/node_modules
+          key: subprojects-${{ runner.os }}-${{ hashFiles('nh-proxy/package-lock.json', 'nh-i-proxy/package-lock.json', 'nh-t-proxy/package-lock.json') }}
+          restore-keys: |
+            subprojects-${{ runner.os }}-
+
+      - name: Install subproject dependencies
+        run: |
+          set -e
+          REPOS=("nh-proxy" "nh-i-proxy" "nh-t-proxy")
+          for pkg in "${REPOS[@]}"; do
+            if [ -f "$pkg/package.json" ]; then
+              echo "Installing dependencies for $pkg"
               pushd "$pkg" > /dev/null
               if [ -f package-lock.json ]; then
                 npm ci --no-audit --no-fund
@@ -31,8 +61,6 @@ jobs:
                 npm install --no-audit --no-fund
               fi
               popd > /dev/null
-            else
-              echo "Skipping $pkg: package.json not found"
             fi
           done
 
@@ -49,6 +77,5 @@ jobs:
           branch: add-lockfiles-automated
           title: "chore(deps): add/update lockfiles"
           body: |
-            This PR adds or updates package lockfiles so Dependabot can
-            detect exact installed dependency versions.
-          labels: "automated,dependencies"   # 👈 FIXED (NO DASHES)
+            This PR updates lockfiles for each subproject.
+          labels: "automated,dependencies"
