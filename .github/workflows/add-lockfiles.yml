@@ -1,0 +1,41 @@
+  - name: Setup Node
+    uses: actions/setup-node@v4
+    with:
+      node-version: '18'
+      cache: 'npm'
+
+  - name: Install dependencies and generate lockfiles
+    run: |
+      set -e
+      REPOS=("nh-proxy" "nh-i-proxy" "nh-t-proxy")
+      for pkg in "${REPOS[@]}"; do
+        if [ -f "$pkg/package.json" ]; then
+          echo "Processing $pkg"
+          pushd "$pkg" > /dev/null
+          # Try to use npm ci when a lockfile exists, otherwise fall back to npm install to create one
+          if [ -f package-lock.json ]; then
+            npm ci --no-audit --no-fund
+          else
+            npm install --no-audit --no-fund
+          fi
+          popd > /dev/null
+        else
+          echo "Skipping $pkg: package.json not found"
+        fi
+      done
+
+  - name: Show changes
+    run: |
+      git status --porcelain
+      git --no-pager diff
+
+  - name: Create pull request with lockfile updates
+    uses: peter-evans/create-pull-request@v5
+    with:
+      token: ${{ secrets.GITHUB_TOKEN }}
+      commit-message: chore(deps): add/update lockfiles
+      branch: add-lockfiles-automated
+      title: chore(deps): add/update lockfiles
+      body: |
+        This PR adds or updates package lockfiles (package-lock.json) for each package so Dependabot can detect exact installed dependency versions and propose updates.
+      labels: automated, dependencies
