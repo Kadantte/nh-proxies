@@ -11,14 +11,22 @@ const API_SERVICE_URL = "https://i.nhentai.net";
 // Logging some shit here
 app.use(morgan('dev'));
 // Save pictures as pictures not as a fucking html
-app.get('/galleries/:id/:file', async function (request, reply) {  
+app.get('/galleries/:id/:file', async function (request, reply) {
+    // Validate id is numeric and file looks like an image file
+    const id = request.params.id;
+    const file = request.params.file;
+    const idPattern = /^\d+$/;
+    const filePattern = /^(\d+)\.(jpg|jpeg|png|gif)$/i;
+    if (!idPattern.test(id) || !filePattern.test(file)) {
+        return reply.status(400).send('Invalid id or file parameter');
+    }
     axios
-        .get(`https://i.nhentai.net/galleries/${request.params.id}/${request.params.file}`, {
+        .get(`https://i.nhentai.net/galleries/${id}/${file}`, {
             responseType: 'arraybuffer'
         })
         .then(response => {
             reply.header('Content-Type', 'image/jpeg')
-                .header('filename',request.params.file)
+                .header('filename', file)
                 .send(response.data)
         })
 });
