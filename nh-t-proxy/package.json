@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "axios": "^0.31.1",
-    "express": "^4.22.1",
+    "express": "^4.22.2",
     "http-proxy-middleware": "^2.0.9",
     "morgan": "^1.10.0"
   }
